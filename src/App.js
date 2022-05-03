@@ -64,6 +64,7 @@ function App() {
     const newFiles = files.map(file => {
       if(file.id === id){
         file.title = title
+        file.isNew = false
       }
       return file
     })

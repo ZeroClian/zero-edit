@@ -12,35 +12,37 @@ const FileList = ({ files, onFileClick, onSaveEdit, onFileDelete }) => {
   const enterPressed = useKeyPress(13)
   const escPressed = useKeyPress(27)
 
-  const closeSearch = () => {
+  const closeSearch = (editItem) => {
     setEditStatus(false)
     setValue('')
+    if(editItem.isNew){
+      onFileDelete(editItem.id)
+    }
   }
 
   useEffect(() => {
-    if (enterPressed && editStatus) {
-      const editItem = files.find((file) => file.id === editStatus)
+    const editItem = files.find((file) => file.id === editStatus)
+    if (enterPressed && editStatus && value.trim() !== '') {
       onSaveEdit(editItem.id, value)
       setEditStatus(false)
       setValue('')
     }
     if (escPressed && editStatus) {
-      closeSearch()
-    }
-  })
-  useEffect(() => {
-    if(editStatus){
-      node.current.focus()
+      closeSearch(editItem)
     }
   })
   useEffect(() => {
     const newFile = files.find(file => file.isNew)
-    console.log(newFile)
     if (newFile) {
       setEditStatus(newFile.id)
       setValue(newFile.title)
     }
   }, [files])
+  // useEffect(() => {
+  //   if (editStatus) {
+  //     node.current.focus()
+  //   }
+  // }, [editStatus])
   
   return (
     <ul className="list-group list-group-flush file-list">
@@ -86,6 +88,7 @@ const FileList = ({ files, onFileClick, onSaveEdit, onFileDelete }) => {
               <input
                 className="form-control col-10"
                 value={value}
+                placeholder='请输入文件名'
                 onChange={(e) => {
                   setValue(e.target.value)
                 }}
@@ -93,7 +96,7 @@ const FileList = ({ files, onFileClick, onSaveEdit, onFileDelete }) => {
               <button
                 type="button"
                 className="icon-button col-2"
-                onClick={closeSearch}
+                onClick={() => {closeSearch(file)}}
               >
                 <FontAwesomeIcon title="关闭" size="lg" icon={faTimes} />
               </button>
