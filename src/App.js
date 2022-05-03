@@ -3,6 +3,7 @@ import { faPlus, faFileImport } from '@fortawesome/free-solid-svg-icons'
 import SimpleMDE from 'react-simplemde-editor'
 import {v4 as uuidv4} from 'uuid'
 import {flattenArr, objToArr} from './utils/helper'
+import fileHelper from './utils/fileHelper'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'easymde/dist/easymde.min.css'
@@ -12,16 +13,17 @@ import defaultFiles from './utils/defaultFiles'
 import ButtonBtn from './component/ButtonBtn'
 import TabList from './component/TabList'
 
+const fs = window.require('fs')
+console.dir(fs)
+
 function App() {
   const [files, setFiles] = useState(flattenArr(defaultFiles))
-  console.log(files)
   const [activeFileID, setActiveFileID] = useState('')
   const [openedFileIDs, setOpenedFileIDs] = useState([])
   const [unsavedFileIDs, setUnsavedFileIDs] = useState([])
   const [searchedFiles, setSearchedFiles] = useState([])
   const filesArr = objToArr(files)
-  console.log(filesArr)
- 
+
   const fileClick = (fileID) => {
     // set current active file
     setActiveFileID(fileID)
@@ -56,7 +58,7 @@ function App() {
     setFiles(files)
     tabClose(id)
   }
-  const updateFileName = (id, title) => {
+  const updateFileName = (id, title, isNew) => {
     const modifiedFile = {...files[id], title, isNew: false}
     setFiles({...files, [id]: modifiedFile})
   }

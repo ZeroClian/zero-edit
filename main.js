@@ -8,6 +8,7 @@ app.on('ready', () => {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false
     },
   })
   const urlLocation = isDev ? 'http://localhost:3000' : 'dummyurl'
